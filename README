@@ -1,0 +1,176 @@
+Juggernaut
+===========
+
+=CONTACT DETAILS
+
+  Author: Alex MacCaw
+  E-Mail Address: info@alexmaccaw.co.uk
+  License: MIT
+  Website: http://juggernaut.rubyforge.org
+  Blog: http://www.eribium.org
+
+=DESCRIPTION
+
+The Juggernaut plugin for Ruby on Rails aims to revolutionize your Rails app by letting the server initiate a connection and push data to the client. In other words your app can have a real time connection to the server with the advantage of instant updates. Although the obvious use of this is for chat, the most exciting prospect for me is collaborative cms and wikis.
+
+What Happens:
+
+   1. Client A opens socket connection to the socket server
+   2. Client B makes Ajax call to Rails
+   3. Rails sends message to the socket server
+   4. Socket server broadcasts message to clients
+
+Juggernaut Features:
+
+    * Allows a real time connection with a client - Rails can literally push javascript in real time to the client which is then evaluated.
+    * Push server - written in Ruby.
+    * Integrated, as a plugin, into Rails.
+    * Subscribers can subscribe to multiple channels, and broadcasters can broadcast to multiple channels.
+    * Subscribers can provide a 'unique_id' and broadcasters can send data to specific clients.
+    * Add and remove channels at runtime
+    * Uses Flash 8 - installed on more than 98% of computers.
+    * Supports all the major browsers (uses ExternalInterface): Firefox 1+, IE 6+ and Safari 2+.
+
+Requirements:
+
+    * Rails 2.0.2 or edge
+    * json gem (gem install json)
+    * EventMachine gem (gem install eventmachine)
+    * juggernaut gem (gem install juggernaut)
+
+
+===============================================
+INSTALLATION
+===============================================
+
+   1. From your Rails Dir:
+      script/plugin install http://juggernaut.rubyforge.org/svn/trunk/juggernaut
+   2. Make sure to include the appropriate JavaScripts in your views/layouts
+      in the header of your views
+      <%= javascript_include_tag 'prototype', :juggernaut %>
+   3. Add this to your view/layout head:
+      <%= juggernaut %>
+   4. Make sure the juggernaut gem is installed (gem install juggernaut) and run:
+      juggernaut -g juggernaut.yml
+      juggernaut -c juggernaut.yml
+   5. Run script/server and visit the Jugged up page.
+   6. Then, to send data to juggernaut, execute this in the console:
+      Juggernaut.send_to_all("alert('hi from juggernaut')")
+
+Usage
+
+To demonstrate Juggernaut I'll walk you through building a simple chat.
+
+Start the push server going by running:
+juggernaut -g juggernaut.yml
+juggernaut -c juggernaut.yml
+
+The chat controller:
+
+class ChatController < ApplicationController
+  def index
+  end
+	
+  def send_data
+    render :juggernaut do |page|
+      page.insert_html :top, 'chat_data', "<li>#{h params[:chat_input]}</li>"
+    end
+    render :nothing => true
+  end
+end
+
+
+The index.html.erb
+
+	<html>
+	  <head>
+	    <%= javascript_include_tag :defaults, :juggernaut %>
+	    <%= juggernaut %>
+	  </head>
+	  <body>
+	    <%= form_remote_tag(
+	          :url => { :action => :send_data },
+	          :complete => "$('chat_input').value = ''" ) %>
+	      <%= text_field_tag( 'chat_input', '', { :size => 20, :id => 'chat_input'} ) %>
+	      <%= submit_tag "Add" %>
+	    </form>
+	    <ul id="chat_data" style="list-style:none">
+	    </ul>
+	  </body>
+	</html>
+
+Start the webserver going with:
+ruby script/server
+
+Try it and see what you think. If it doesn't work please visit the faq.
+
+Other ways of rendering to juggernaut:
+
+render :juggernaut do |page|
+  page.alert('hi')
+end
+
+render_juggernaut(:action => 'whatever')
+
+===============================================
+More usage information, examples and support
+===============================================
+
+=== Channel Usage ===
+
+<%= juggernaut(:channels => ['one', 'two', 'three']) %>
+render :juggernaut => {:type => :send_to_channels, :channels => ['one']} do |page|
+  page.alert('hi')
+end
+
+Client id usage:
+<%= juggernaut(:client_id => session[:user_id]) %>
+render :juggernaut => {:type => :send_to_clients, :client_ids => [1, 2, 3]} do |page|
+  page.alert('hi')
+end
+
+Other juggernaut render options:
+OPTION_TYPE                     PARAMS
+:send_to_all                  
+:send_to_channels               :channels
+:send_to_channel                :channel
+:send_to_client                 :client_id
+:send_to_clients                :client_ids
+:send_to_client_on_channel      :client_id,  :channel
+:send_to_clients_on_channel     :client_ids, :channel
+:send_to_client_on_channels     :client_id, :channels
+:send_to_clients_on_channels    :client_ids, :channels
+
+You can also call these methods directly on the Juggernaut class:
+Juggernaut.send_to_clients('data', [1,2,3])
+
+For authentication options and callbacks see the juggernaut.yml configuration file.
+
+Usage and examples: http://ncavig.com/blog/
+Support and forums: http://groups.google.com/group/Juggernaut-for-Rails?hl=en
+
+=== Getting remote clients to connect ===
+
+Firstly you will need to configure juggernaut_hosts.yml in your Rails app to point to the proper IP of the push server (rather than 127.0.0.1).
+For example:
+:hosts:
+  - :port: 5001
+    :host: 129.168.0.2
+    :environment: :production
+
+Ok, remote clients that visit pages on this server (once you restart it) will connect to the proper push server IP. BUT, if you're using IP based
+authentication (recommended) you'll find that the broadcast authentication fails.
+You'll need to add the Rails IP to juggernaut.yml, like so:
+
+:allowed_ips: 
+        - 127.0.0.1
+        - 192.168.0.4 # IP of the Rails app
+             
+===============================================
+Troubleshooting
+===============================================
+
+Check out the support forums on google groups:
+http://groups.google.com/group/Juggernaut-for-Rails
+
+

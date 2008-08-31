@@ -1,0 +1,18 @@
+# You should list any juggernaut hosts here.
+# You need only specify the secret key if you're using that type of authentication (see juggernaut.yml)
+# 
+# Name:                       Mapping:
+# :port                       internal push server's port
+# :host                       internal push server's host/ip
+# :public_host                public push server's host/ip (accessible from external clients)
+# :public_port                public push server's port
+# :secret_key (optional)      shared secret (should map to the key specified in the push server's config)
+# :environment (optional)     limit host to a particular RAILS_ENV
+
+:hosts:
+  - :port: 5001
+    :host: 127.0.0.1
+    :public_host: 127.0.0.1
+    :public_port: 5001
+    # :secret_key: your_secret_key
+    # :environment: :development
