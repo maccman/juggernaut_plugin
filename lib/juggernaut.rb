@@ -118,9 +118,7 @@ module Juggernaut
           @socket.close if @socket and !@socket.closed?
         end
       end
-      res.collect {|r| 
-        ActiveSupport::JSON.decode(r.chomp!(CR)).with_indifferent_access
-      } if response
+      res.collect {|r| ActiveSupport::JSON.decode(r.chomp!(CR)) } if response
     end
     
   private
