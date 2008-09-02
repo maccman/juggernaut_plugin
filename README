@@ -165,7 +165,64 @@ You'll need to add the Rails IP to juggernaut.yml, like so:
 :allowed_ips: 
         - 127.0.0.1
         - 192.168.0.4 # IP of the Rails app
-             
+
+===============================================
+Jquery
+===============================================
+
+To get Juggernaut working with Jquery (Prototype is used by default) follow the tutorial above with the following differences.
+
+>>Javascripts
+
+  You must have jquery.js (version 1.2.6 tested) and the jquery-json plugin (http://www.jdempster.com/wp-content/uploads/2007/08/jquery.json.js) in the /javascripts directory. 
+
+  You need the jquerynaut.js file in the /javascripts/juggernaut directory (found in /lib in the media directory)
+
+
+>>The chat controller:
+
+  class ChatController < ApplicationController
+    def index
+    end
+	
+    def send_data
+      render :juggernaut do |page|
+        page["#chat_data"].prepend "<li>#{h params[:chat_input]}</li>"
+      end
+      render :nothing => true
+    end
+
+  end
+
+
+>>The index.html.erb
+
+  <html>
+    <head>
+      <%= javascript_include_tag 'jquery', 'json', 'juggernaut/juggernaut', 'juggernaut/jquerynaut', 'juggernaut/swfobject'  %>
+      <%= juggernaut %>
+    </head>
+    <body>
+      <form action="/chat/send_data" method="get">
+        <div style="margin:0;padding:0">
+        <input id="chat_input" name="chat_input" size="20" type="text" value="" />
+        <input name="commit" type="submit" value="Add" />
+      </form>
+
+      <script>
+      $(document).ready(function(){
+        $('form').submit(function(){
+          $.get('/chat/send_data', { chat_input: $('#chat_input').val() } )
+          return false;
+        })
+      })
+      </script>
+      <ul id="chat_data" style="list-style:none"></ul>
+    </body>
+  </html>
+
+
+
 ===============================================
 Troubleshooting
 ===============================================

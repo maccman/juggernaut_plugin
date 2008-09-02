@@ -3,6 +3,7 @@ require "socket"
 
 module Juggernaut
   CONFIG = YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/juggernaut_hosts.yml")).result).freeze
+  CR = "\0"
   
   class << self
     
@@ -71,26 +72,61 @@ module Juggernaut
       }
       send_data(fc)
     end
+    
+    def show_clients
+      fc = {
+        :command  => :query,
+        :type     => :show_clients
+      }
+      send_data(fc, true).flatten
+    end
+    
+    def show_client(client_id)
+      fc = {
+        :command    => :query,
+        :type       => :show_client,
+        :client_id  => client_id
+      }
+      send_data(fc, true).flatten[0]
+    end
+    
+    def show_clients_for_channels(channels)
+      fc = {
+        :command    => :query,
+        :type       => :show_clients_for_channels,
+        :channels   => channels
+      }
+      send_data(fc, true).flatten
+    end
+    alias show_clients_for_channel show_clients_for_channels
 
-    def send_data(hash)
-      hash[:channels] = hash[:channels].to_a if hash[:channels]
+    def send_data(hash, response = false)
+      hash[:channels]   = hash[:channels].to_a   if hash[:channels]
       hash[:client_ids] = hash[:client_ids].to_a if hash[:client_ids]
-                  
-      CONFIG[:hosts].select {|h| !h[:environment] or h[:environment] == ENV['RAILS_ENV'].to_sym }.each do |address|
+      
+      res = []
+      hosts.each do |address|
         begin
           hash[:secret_key] = address[:secret_key] if address[:secret_key]
           
           @socket = TCPSocket.new(address[:host], address[:port])
           # the \0 is to mirror flash
-          @socket.print(hash.to_json + "\0")
+          @socket.print(hash.to_json + CR)
           @socket.flush
-        # rescue => e
-          # puts e
-          # false
+          res << @socket.readline(CR) if response
         ensure
           @socket.close if @socket and !@socket.closed?
         end
       end
+      res.collect {|r| ActiveSupport::JSON.decode(r.chomp!(CR)) } if response
+    end
+    
+  private
+    
+    def hosts
+      CONFIG[:hosts].select {|h| 
+        !h[:environment] or h[:environment].to_s == ENV['RAILS_ENV']
+      }
     end
     
   end
