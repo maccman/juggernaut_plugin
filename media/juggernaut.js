@@ -22,20 +22,20 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 function Juggernaut(options) {
-    this.is_connected = false,
-    this.attempting_to_reconnect = false
-    this.ever_been_connected = false
-    this.hasFirebug = "console" in window && "firebug" in window.console
-    this.options = options
+    this.is_connected = false;
+    this.attempting_to_reconnect = false;
+    this.ever_been_connected = false;
+    this.hasLogger = "console" in window && "log" in window.console;
+    this.options = options;
     this.bindToWindow();
   }
 
-Juggernaut.fn = Juggernaut.prototype
+Juggernaut.fn = Juggernaut.prototype;
 
 Juggernaut.fn.logger = function(msg) {
     if (this.options.debug) {
       msg = "Juggernaut: " + msg + " on " + this.options.host + ':' + this.options.port;
-      this.hasFirebug ? console.log(msg) : alert(msg);
+      this.hasLogger ? console.log(msg) : alert(msg);
     }
   }
 
@@ -95,7 +95,6 @@ Juggernaut.fn.connected = function(e) {
     this.fire_event('connected');
   }
 
-// OVERRIDE FOR CHAT STYLE APPS - POSSIBLE MALICIOUS CONTENT CAN BE EVALED
 Juggernaut.fn.receiveData = function(e) {
      var msg = Juggernaut.parseJSON(unescape(e.toString()));
      this.currentMsgId = msg.id;
@@ -106,7 +105,7 @@ Juggernaut.fn.receiveData = function(e) {
 
 var juggernaut;
 
-/*** START PROTOTYPE SPECIFIC - OVERRIDE FOR OTHER FRAMEWORKS ***/
+// Prototype specific - override for other frameworks
 Juggernaut.fn.fire_event = function(fx_name) {
      $(document).fire("juggernaut:" + fx_name);
    }
@@ -156,7 +155,6 @@ Juggernaut.fn.appendFlashObject = function(){
       {'id': this.options.swf_name, 'name': this.options.swf_name}
     );
   }
-  
 
 Juggernaut.fn.refreshFlashObject = function(){
     this.swf().remove();
@@ -201,5 +199,3 @@ the first in ' + (this.options.reconnect_intervals || 3) + ' seconds');
       }
     }
   }
-
-
