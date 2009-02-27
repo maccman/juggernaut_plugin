@@ -9,7 +9,7 @@ module Juggernaut # :nodoc:
         :port                 => (random_host[:public_port] || random_host[:port]),
         :width                => '0px',
         :height               => '0px',
-        :session_id           => session.session_id,
+        :session_id           => request.session_options[:id],
         :swf_address          => "/juggernaut/juggernaut.swf",
         :ei_swf_address       => "/juggernaut/expressinstall.swf",
         :flash_version        => 8,
