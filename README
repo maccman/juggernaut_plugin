@@ -44,13 +44,13 @@ INSTALLATION
 ===============================================
 
    1. From your Rails Dir:
-      script/plugin install http://juggernaut.rubyforge.org/svn/trunk/juggernaut
+      script/plugin install git://github.com/maccman/juggernaut_plugin.git
    2. Make sure to include the appropriate JavaScripts in your views/layouts
       in the header of your views
       <%= javascript_include_tag 'prototype', :juggernaut %>
    3. Add this to your view/layout head:
       <%= juggernaut %>
-   4. Make sure the juggernaut gem is installed (gem install juggernaut) and run:
+   4. Make sure the juggernaut gem is installed (gem install maccman-juggernaut -s http://gems.github.com ) and run:
       juggernaut -g juggernaut.yml
       juggernaut -c juggernaut.yml
    5. Run script/server and visit the Jugged up page.
