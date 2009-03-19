@@ -9,7 +9,7 @@ module Juggernaut # :nodoc:
         :port                 => (random_host[:public_port] || random_host[:port]),
         :width                => '0px',
         :height               => '0px',
-        :session_id           => session.session_id,
+        :session_id           => request.session_options[:id],
         :swf_address          => "/juggernaut/juggernaut.swf",
         :ei_swf_address       => "/juggernaut/expressinstall.swf",
         :flash_version        => 8,
@@ -22,16 +22,6 @@ module Juggernaut # :nodoc:
       }.merge(options)
       javascript_tag "new Juggernaut(#{options.to_json});"
     end
-    
-    def expand_javascript_sources(sources, recursive = false)
-      if sources.include?(:juggernaut)
-        sources = sources[0..(sources.index(:juggernaut))] + 
-          ['juggernaut/swfobject', 'juggernaut/juggernaut'] + 
-          sources[(sources.index(:juggernaut) + 1)..sources.length]
-        sources.delete(:juggernaut)
-      end
-      super(sources)
-    end
-    
+
   end
 end

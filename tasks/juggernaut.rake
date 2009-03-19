@@ -8,6 +8,6 @@ end
 namespace :juggernaut do
   desc 'Compile the juggernaut flash file'
   task :compile_flash do
-    `mtasc -header 1:1:1 -main -swf media/juggernaut.swf media/juggernaut.as`
+    `mtasc -version 8 -header 1:1:1 -main -swf media/juggernaut.swf media/juggernaut.as`
   end
 end
