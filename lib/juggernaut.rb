@@ -101,8 +101,8 @@ module Juggernaut
     alias show_clients_for_channel show_clients_for_channels
 
     def send_data(hash, response = false)
-      hash[:channels]   = hash[:channels].to_a   if hash[:channels]
-      hash[:client_ids] = hash[:client_ids].to_a if hash[:client_ids]
+      hash[:channels]   = Array(hash[:channels])   if hash[:channels]
+      hash[:client_ids] = Array(hash[:client_ids]) if hash[:client_ids]
       
       res = []
       hosts.each do |address|
