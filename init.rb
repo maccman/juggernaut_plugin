@@ -1,5 +1,5 @@
-require 'juggernaut'
-require 'juggernaut_helper'
+require File.dirname(__FILE__) + '/lib/juggernaut'
+require File.dirname(__FILE__) + '/lib/juggernaut_helper'
 
 # ActionView::Helpers::AssetTagHelper::register_javascript_include_default('juggernaut')
 # ActionView::Helpers::AssetTagHelper::register_javascript_include_default('swfobject')
