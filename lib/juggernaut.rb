@@ -168,28 +168,28 @@ module Juggernaut
           case options[:type]
             when :send_to_all
               Juggernaut.send_to_all(data)
-            when :send_to_channels:
+            when :send_to_channels
               juggernaut_needs options, :channels
               Juggernaut.send_to_channels(data, options[:channels])
-            when :send_to_channel:
+            when :send_to_channel
               juggernaut_needs options, :channel
               Juggernaut.send_to_channel(data, options[:channel])
-            when :send_to_client:
+            when :send_to_client
               juggernaut_needs options, :client_id
               Juggernaut.send_to_client(data, options[:client_id])
-            when :send_to_clients:
+            when :send_to_clients
               juggernaut_needs options, :client_ids
               Juggernaut.send_to_clients(data, options[:client_ids])
-            when :send_to_client_on_channel:
+            when :send_to_client_on_channel
               juggernaut_needs options, :client_id, :channels
               Juggernaut.send_to_clients_on_channel(data, options[:client_id], options[:channels])
-            when :send_to_clients_on_channel:
+            when :send_to_clients_on_channel
               juggernaut_needs options, :client_ids, :channel
               Juggernaut.send_to_clients_on_channel(data, options[:client_ids], options[:channel])
-            when :send_to_client_on_channels:
+            when :send_to_client_on_channels
               juggernaut_needs options, :client_ids, :channel
               Juggernaut.send_to_clients_on_channel(data, options[:client_id], options[:channels])
-            when :send_to_clients_on_channels:
+            when :send_to_clients_on_channels
               juggernaut_needs options, :client_ids, :channel
               Juggernaut.send_to_clients_on_channel(data, options[:client_ids], options[:channels])
           end
