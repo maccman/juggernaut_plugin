@@ -100,8 +100,12 @@ Juggernaut.fn.receiveData = function(e) {
      this.currentMsgId = msg.id;
      this.currentSignature = msg.signature;
      this.logger("Received data:\n" + msg.body + "\n");
-     eval(msg.body); 
-  };
+     this.dispatchMessage(msg);
+};
+  
+Juggernaut.fn.dispatchMessage = function(msg) {
+  eval(msg.body);
+}
 
 var juggernaut;
 
