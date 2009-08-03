@@ -1,9 +1,6 @@
 require File.dirname(__FILE__) + '/lib/juggernaut'
 require File.dirname(__FILE__) + '/lib/juggernaut_helper'
 
-# ActionView::Helpers::AssetTagHelper::register_javascript_include_default('juggernaut')
-# ActionView::Helpers::AssetTagHelper::register_javascript_include_default('swfobject')
-
 ActionView::Base.send(:include, Juggernaut::JuggernautHelper)
 
 ActionView::Helpers::AssetTagHelper.register_javascript_expansion :juggernaut => ['juggernaut/swfobject', 'juggernaut/juggernaut']
