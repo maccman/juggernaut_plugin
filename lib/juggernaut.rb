@@ -142,8 +142,12 @@ module Juggernaut
         def render_with_juggernaut(options = nil, extra_options = {}, &block)
           if options == :juggernaut or (options.is_a?(Hash) and options[:juggernaut])
             begin
-              @template.send(:_evaluate_assigns_and_ivars)
-
+              if @template.respond_to?(:_evaluate_assigns_and_ivars)
+                @template.send(:_evaluate_assigns_and_ivars)
+              else
+                @template.send(:evaluate_assigns)
+              end
+              
               generator = ActionView::Helpers::PrototypeHelper::JavaScriptGenerator.new(@template, &block)            
               render_for_juggernaut(generator.to_s, options.is_a?(Hash) ? options[:juggernaut] : nil)
             ensure
