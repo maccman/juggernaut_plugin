@@ -49,8 +49,8 @@ module Juggernaut
       }
       send_data(fc)
     end
-    alias send_to_client_on_channel send_to_clients_on_channels
-    alias send_to_client_on_channel send_to_clients_on_channels
+    alias send_to_clients_on_channel send_to_clients_on_channels
+    alias send_to_client_on_channels send_to_clients_on_channels
     
     def remove_channels_from_clients(client_ids, channels)
       fc = {
