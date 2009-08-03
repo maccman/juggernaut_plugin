@@ -1,6 +1,5 @@
-%w{juggernaut juggernaut_helper}.each do |file|
-  require File.join File.dirname(__FILE__), 'lib', file
-end
+require File.dirname(__FILE__) + '/lib/juggernaut'
+require File.dirname(__FILE__) + '/lib/juggernaut_helper'
 
 # ActionView::Helpers::AssetTagHelper::register_javascript_include_default('juggernaut')
 # ActionView::Helpers::AssetTagHelper::register_javascript_include_default('swfobject')
