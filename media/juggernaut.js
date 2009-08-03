@@ -88,9 +88,10 @@ Juggernaut.fn.connected = function(e) {
     this.sendData(json);
     this.ever_been_connected = true;
     this.is_connected = true;
+    var self = this;
     setTimeout(function(){
-      if(this.is_connected) this.attempting_to_reconnect = false;
-    }.bind(this), 1 * 1000);
+      if(self.is_connected) self.attempting_to_reconnect = false;
+    }, 1 * 1000);
     this.logger('Connected');
     this.fire_event('connected');
   }
