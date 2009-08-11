@@ -142,7 +142,7 @@ module Juggernaut
         def render_with_juggernaut(options = nil, extra_options = {}, &block)
           if options == :juggernaut or (options.is_a?(Hash) and options[:juggernaut])
             begin
-              if @template.respond_to?(:_evaluate_assigns_and_ivars)
+              if @template.respond_to?(:_evaluate_assigns_and_ivars, true)
                 @template.send(:_evaluate_assigns_and_ivars)
               else
                 @template.send(:evaluate_assigns)
